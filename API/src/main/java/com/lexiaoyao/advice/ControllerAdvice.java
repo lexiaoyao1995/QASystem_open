@@ -2,6 +2,7 @@ package com.lexiaoyao.advice;
 
 import com.lexiaoyao.model.BusinessException;
 import com.lexiaoyao.model.ErrorType;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,4 +28,15 @@ public class ControllerAdvice {
         }
         return map;
     }
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Map<String, Object> handUserExpireJWT(JwtException ex) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("error", "身份过期");
+        return map;
+    }
+
+
 }
