@@ -16,6 +16,15 @@
             <artifactId>model</artifactId>
             <version>${lexiaoyao.version}</version>
         </dependency>
+
+
+<!--        mongo-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
+
         <!--    jdbc依赖-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>

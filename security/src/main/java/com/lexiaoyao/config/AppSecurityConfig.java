@@ -33,7 +33,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(
                         "/authentication/require",
-                        "/register"
+                        "/register",
+                        "/topic/guest"
                 ).permitAll()
 //                swagger
                 .antMatchers("/swagger-ui.html").permitAll()

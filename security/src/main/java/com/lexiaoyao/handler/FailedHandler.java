@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 用户登陆失败的处理器
+ */
 @Component
 public class FailedHandler implements AuthenticationFailureHandler {
 
@@ -25,6 +28,6 @@ public class FailedHandler implements AuthenticationFailureHandler {
                                         AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         httpServletResponse.setContentType("application/json;charset=UTF-8");
-        httpServletResponse.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(e.getMessage())));
+        httpServletResponse.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage())));
     }
 }

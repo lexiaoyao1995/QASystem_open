@@ -1,5 +1,7 @@
 package com.lexiaoyao.handler;
 
+import com.lexiaoyao.model.BusinessException;
+import com.lexiaoyao.model.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang.StringUtils;
@@ -28,9 +30,16 @@ public class JWTFilter extends BasicAuthenticationFilter {
         String header = request.getHeader("access-token");
 
         if (!StringUtils.isBlank(header)) {
-            Claims body = Jwts.parser().setSigningKey(SING_KEY)
-                    .parseClaimsJws(header.replace("Bearer ", ""))
-                    .getBody();
+
+            Claims body = null;
+            try {
+                body = Jwts.parser().setSigningKey(SING_KEY)
+                        .parseClaimsJws(header.replace("Bearer ", ""))
+                        .getBody();
+            } catch (RuntimeException e) {
+                throw new BusinessException(ErrorType.JWT_EXPIRED);
+            }
+
             String username = body.getSubject();
             if (!StringUtils.isBlank(username)) {
                 User user = new User(username, "", AuthorityUtils.createAuthorityList("admin"));

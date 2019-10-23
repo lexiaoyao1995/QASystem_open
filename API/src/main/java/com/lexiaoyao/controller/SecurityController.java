@@ -31,6 +31,8 @@ public class SecurityController {
     @PostMapping("/register")
     public ResponseEntity register(String username, String password) {
 
+//        throw new BusinessException(ErrorType.USERNAME_NOT_EXIST);
+
         if (userService.getByName(username) != null) {
             throw new BusinessException(ErrorType.USER_ALREADY_EXIST);
         }

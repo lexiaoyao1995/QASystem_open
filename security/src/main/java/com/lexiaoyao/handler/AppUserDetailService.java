@@ -1,5 +1,7 @@
 package com.lexiaoyao.handler;
 
+import com.lexiaoyao.model.BusinessException;
+import com.lexiaoyao.model.ErrorType;
 import com.lexiaoyao.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -21,7 +23,7 @@ public class AppUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.lexiaoyao.model.User user = userService.getByName(username);
         if (Objects.isNull(user)) {
-            throw new UsernameNotFoundException(username);
+            throw new BusinessException(ErrorType.USERNAME_NOT_EXIST);
         }
         return new User(username, user.getPassword(), Collections.emptyList());
 

@@ -17,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * 用户成功登陆的异常处理
+ */
 @Component
 public class SuccessHandler implements AuthenticationSuccessHandler {
 
