@@ -3,7 +3,6 @@ package com.lexiaoyao.controller;
 import com.lexiaoyao.model.mongo_po.Topic;
 import com.lexiaoyao.service.TopicService;
 import com.mongodb.WriteResult;
-import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;

@@ -8,6 +8,7 @@ import org.bson.types.ObjectId;
 import java.io.IOException;
 
 public class ObjectIdSerializer extends StdSerializer<ObjectId> {
+
     public ObjectIdSerializer() {
         super(ObjectId.class);
     }

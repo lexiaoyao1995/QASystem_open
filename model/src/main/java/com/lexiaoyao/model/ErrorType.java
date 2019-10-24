@@ -4,7 +4,8 @@ public enum ErrorType {
     USER_ALREADY_EXIST("用户已存在"),
     USERNAME_NOT_EXIST("用户名不存在"),
     JWT_EXPIRED("TOKEN过期"),
-    TOPIC_EXIST("主题名已存在");
+    TOPIC_EXIST("主题名已存在"),
+    UPLOAD_FAILED("上传失败");
 
 
     private String message;

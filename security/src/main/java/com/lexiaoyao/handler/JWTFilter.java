@@ -1,10 +1,15 @@
 package com.lexiaoyao.handler;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lexiaoyao.model.BusinessException;
 import com.lexiaoyao.model.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -25,6 +30,9 @@ public class JWTFilter extends BasicAuthenticationFilter {
 
     public static final String SING_KEY = "lexiaoyao";
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader("access-token");
@@ -37,7 +45,10 @@ public class JWTFilter extends BasicAuthenticationFilter {
                         .parseClaimsJws(header.replace("Bearer ", ""))
                         .getBody();
             } catch (RuntimeException e) {
-                throw new BusinessException(ErrorType.JWT_EXPIRED);
+                response.setStatus(HttpStatus.OK.value());
+                response.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("token过期")));
+                return;
+//                throw new BusinessException(ErrorType.JWT_EXPIRED);
             }
 
             String username = body.getSubject();

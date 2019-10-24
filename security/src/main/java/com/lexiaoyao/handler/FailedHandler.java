@@ -28,6 +28,7 @@ public class FailedHandler implements AuthenticationFailureHandler {
                                         AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         httpServletResponse.setContentType("application/json;charset=UTF-8");
+        httpServletResponse.setStatus(HttpStatus.OK.value());
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage())));
     }
 }

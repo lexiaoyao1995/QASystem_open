@@ -13,14 +13,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
 import java.util.Date;
+
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "topic")
-public class  Topic implements Serializable {
+@Document(collection = "album")
+public class Album {
     @Id
     @JsonProperty("_id")
     @JsonSerialize(using = ObjectIdSerializer.class)
@@ -35,10 +35,10 @@ public class  Topic implements Serializable {
 
     private Date createTime;
 
-    public Topic(String name, String desc) {
+    public Album(String name, String desc) {
+        this.id = new ObjectId();
         this.name = name;
         this.desc = desc;
-        this.id = new ObjectId();
         this.createTime = new Date();
     }
 }
