@@ -32,7 +32,7 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
         String userName = ((UserDetails) authentication.getPrincipal()).getUsername();
         String token = "Bearer " + Jwts.builder().setSubject(userName)
                 .claim("authorities", ListUtils.EMPTY_LIST)
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS512, JWTFilter.SING_KEY).compact();
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.ok(token)));
     }

@@ -1,13 +1,10 @@
 package com.lexiaoyao.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lexiaoyao.model.BusinessException;
-import com.lexiaoyao.model.ErrorType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +27,7 @@ public class JWTFilter extends BasicAuthenticationFilter {
 
     public static final String SING_KEY = "lexiaoyao";
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -46,7 +42,7 @@ public class JWTFilter extends BasicAuthenticationFilter {
                         .getBody();
             } catch (RuntimeException e) {
                 response.setStatus(HttpStatus.OK.value());
-                response.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("token过期")));
+                response.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("token out time")));
                 return;
 //                throw new BusinessException(ErrorType.JWT_EXPIRED);
             }

@@ -35,7 +35,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/authentication/require",
                         "/register",
                         "/topic/guest",
-                        "/photo/**"
+                        "/photo/**",
+                        "/topic/**"
                 ).permitAll()
 //                swagger
                 .antMatchers("/swagger-ui.html").permitAll()

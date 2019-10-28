@@ -16,7 +16,7 @@ public class ControllerAdvice {
     @ExceptionHandler(BusinessException.class)//只要抛出了这个异常就会进入到这个方法
     @ResponseBody
     public ResponseEntity handUser(BusinessException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getType().getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(ex.getType().getMessage());
     }
 
 }

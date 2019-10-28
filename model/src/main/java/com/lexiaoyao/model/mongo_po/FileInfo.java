@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.lexiaoyao.model.ObjectIdDeserializer;
 import com.lexiaoyao.model.ObjectIdSerializer;
+import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Data
 public class FileInfo implements Serializable {
 
     @Id
@@ -23,35 +25,5 @@ public class FileInfo implements Serializable {
 
     private Date uploadData;
 
-    public ObjectId getId() {
-        return id;
-    }
-
-    public void setId(ObjectId id) {
-        this.id = id;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getLength() {
-        return length;
-    }
-
-    public void setLength(Long length) {
-        this.length = length;
-    }
-
-    public Date getUploadData() {
-        return uploadData;
-    }
-
-    public void setUploadData(Date uploadData) {
-        this.uploadData = uploadData;
-    }
+    private Boolean isCover = false;
 }

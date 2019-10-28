@@ -32,7 +32,7 @@ public class TopicController {
         return ResponseEntity.ok(topic);
     }
 
-    @GetMapping("/guest")
+    @GetMapping
     public ResponseEntity listAll() {
         return ResponseEntity.ok(topicService.listAll());
     }

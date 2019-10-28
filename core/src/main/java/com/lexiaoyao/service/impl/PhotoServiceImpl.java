@@ -28,6 +28,8 @@ import javax.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,7 +55,12 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public FileInfo save(MultipartFile photo, String albumId) {
+    public FileInfo save(MultipartFile photo, String albumId, Boolean isCover) {
+
+        if (isCover && !Objects.isNull(getCover(albumId))) {
+            throw new BusinessException(ErrorType.COVER_ALREADY_EXIST);
+        }
+
         GridFS gridFS = new GridFS(mongoDbFactory.getDb());
         try (InputStream inputStream = photo.getInputStream()) {
             String filename = photo.getOriginalFilename();
@@ -63,15 +70,17 @@ public class PhotoServiceImpl implements PhotoService {
             file.save();
             AlbumPhoto albumPhoto = new AlbumPhoto();
             albumPhoto.setFsFile(convert(file));
+            if (isCover)
+                albumPhoto.getFsFile().setIsCover(true);
             albumPhoto.setAlbum(albumDao.findOne(new Query().addCriteria(Criteria.where("_id").is(new ObjectId(albumId)))));
             albumPhoto.setId(new ObjectId());
             albumPhotoDao.insert(albumPhoto);
-            return convert(file);
-
+            return albumPhoto.getFsFile();
         } catch (Exception e) {
             throw new BusinessException(ErrorType.UPLOAD_FAILED);
         }
     }
+
 
     @Override
     public GridFSDBFile getPhotoById(String fileId) {
@@ -95,6 +104,17 @@ public class PhotoServiceImpl implements PhotoService {
         List<FileInfo> collect = all.stream().map(AlbumPhoto::getFsFile).collect(Collectors.toList());
 
         return collect;
+    }
+
+    @Override
+    public FileInfo getCover(String albumId) {
+        AlbumPhoto one = albumPhotoDao.findOne(new Query().addCriteria(Criteria.where("album.$id").is(new ObjectId(albumId)).and("fsFile.isCover").is(true)));
+        return Optional.ofNullable(one).map(AlbumPhoto::getFsFile).orElse(null);
+    }
+
+    @Override
+    public List<Album> listAlbums() {
+        return albumDao.findAll(null);
     }
 
     private FileInfo convert(GridFSInputFile file) {
