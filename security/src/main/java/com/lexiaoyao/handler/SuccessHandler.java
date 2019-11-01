@@ -5,8 +5,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.commons.collections.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -34,6 +36,9 @@ public class SuccessHandler implements AuthenticationSuccessHandler {
                 .claim("authorities", ListUtils.EMPTY_LIST)
                 .setExpiration(new Date(System.currentTimeMillis() + 2 * 60 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS512, JWTFilter.SING_KEY).compact();
-        httpServletResponse.getWriter().write(objectMapper.writeValueAsString(ResponseEntity.ok(token)));
+
+        httpServletResponse.getWriter().write(objectMapper
+                .writeValueAsString(ResponseEntity
+                        .status(HttpStatus.OK).header("username", userName).body(token)));
     }
 }

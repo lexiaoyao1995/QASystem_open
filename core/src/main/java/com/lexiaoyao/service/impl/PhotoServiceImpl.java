@@ -94,8 +94,10 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public void createAlbum(String albumName, String desc) {
-        albumDao.insert(new Album(albumName, desc));
+    public Album createAlbum(String albumName, String desc) {
+        Album album = new Album(albumName, desc);
+        albumDao.insert(album);
+        return album;
     }
 
     @Override

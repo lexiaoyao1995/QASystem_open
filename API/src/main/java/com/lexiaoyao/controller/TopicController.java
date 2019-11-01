@@ -1,8 +1,11 @@
 package com.lexiaoyao.controller;
 
+import com.lexiaoyao.model.mongo_po.Article;
 import com.lexiaoyao.model.mongo_po.Topic;
+import com.lexiaoyao.model.mongo_po.TopicArticle;
 import com.lexiaoyao.service.TopicService;
 import com.mongodb.WriteResult;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -11,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +25,21 @@ public class TopicController {
 
     @Autowired
     private TopicService topicService;
+
+    @PostMapping("/{topicId}")
+    public ResponseEntity insertArticle(@PathVariable("topicId") String topicId, @RequestBody Article article) {
+        article.setCreateTime(new Date());
+        article.setId(new ObjectId());
+        TopicArticle topicArticle = topicService.insertArticle(topicService.getTopicById(topicId), article);
+        return ResponseEntity.ok(topicArticle);
+    }
+
+    @GetMapping("/{topicId}")
+    public ResponseEntity getArticles(@PathVariable("topicId") String topicId) {
+        List<Article> articlesByTopicId = topicService.getArticlesByTopicId(topicId);
+        return ResponseEntity.ok(articlesByTopicId);
+    }
+
 
     @PostMapping
     public ResponseEntity insert(@Valid @RequestBody Topic topic, BindingResult result) {

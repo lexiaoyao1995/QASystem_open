@@ -34,10 +34,18 @@ public class PhotoController {
         return ResponseEntity.ok(list);
     }
 
+    /**
+     * 新建相册
+     * @param name
+     * @param desc
+     * @param file
+     * @return
+     */
     @PostMapping("/album")
-    public ResponseEntity insertAlbum(String name, String desc) {
-        photoService.createAlbum(name, desc);
-        return ResponseEntity.ok(null);
+    public ResponseEntity insertAlbum(String name, String desc, @RequestParam(value = "file") MultipartFile file) {
+        Album album = photoService.createAlbum(name, desc);
+        photoService.save(file, album.getId().toString(), true);
+        return ResponseEntity.ok(album);
     }
 
     @PostMapping("/{albumId}")

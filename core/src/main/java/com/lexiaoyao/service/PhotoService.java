@@ -16,7 +16,7 @@ public interface PhotoService {
 
     void removePhoto(String id);
 
-    void createAlbum(String albumName, String desc);
+    Album createAlbum(String albumName, String desc);
 
     List<FileInfo> getPhotosByAlbumId(String id);
 
