@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lexiaoyao.model.mongo_po.Album;
 import com.lexiaoyao.model.mongo_po.FileInfo;
 import com.lexiaoyao.service.PhotoService;
+import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,20 @@ public class PhotoController {
     @Autowired
     private PhotoService photoService;
 
+    @DeleteMapping("/album/{albumId}")
+    public ResponseEntity deleteAlbum(@PathVariable("albumId") String albumId) {
+        WriteResult writeResult = photoService.deleteAlbum(albumId);
+        return ResponseEntity.ok(writeResult);
+
+    }
+
+
+    @DeleteMapping("/{photoId}")
+    public ResponseEntity deletePhotoById(@PathVariable("photoId") String photoId) {
+        WriteResult writeResult = photoService.removePhotoById(photoId);
+        return ResponseEntity.ok(writeResult);
+    }
+
     @GetMapping("/albums")
     public ResponseEntity getAlbums() {
 
@@ -36,6 +51,7 @@ public class PhotoController {
 
     /**
      * 新建相册
+     *
      * @param name
      * @param desc
      * @param file

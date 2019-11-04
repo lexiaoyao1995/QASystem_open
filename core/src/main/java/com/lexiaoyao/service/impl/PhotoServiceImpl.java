@@ -9,13 +9,12 @@ import com.lexiaoyao.model.mongo_po.AlbumPhoto;
 import com.lexiaoyao.model.mongo_po.FileInfo;
 import com.lexiaoyao.service.PhotoService;
 import com.mongodb.BasicDBObject;
+import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.mongodb.gridfs.GridFSFile;
 import com.mongodb.gridfs.GridFSInputFile;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -88,10 +87,6 @@ public class PhotoServiceImpl implements PhotoService {
         return gridFS.findOne(new BasicDBObject("_id", new ObjectId(fileId)));
     }
 
-    @Override
-    public void removePhoto(String id) {
-
-    }
 
     @Override
     public Album createAlbum(String albumName, String desc) {
@@ -117,6 +112,29 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public List<Album> listAlbums() {
         return albumDao.findAll(null);
+    }
+
+    @Override
+    public WriteResult removePhotoById(String photoId) {
+        WriteResult remove = albumPhotoDao.remove(new Query().addCriteria(Criteria.where("fsFile._id").is(new ObjectId(photoId))));
+        GridFS gridFS = new GridFS(mongoDbFactory.getDb());
+        gridFS.remove(new ObjectId(photoId));
+        return remove;
+    }
+
+    @Override
+    public Album getAlbumById(String albumId) {
+        return albumDao.findOne(new Query().addCriteria(Criteria.where("_id").is(new ObjectId(albumId))));
+    }
+
+    @Override
+    public WriteResult deleteAlbum(String albumId) {
+        Album album = getAlbumById(albumId);
+        albumDao.removeOne(album);
+        List<FileInfo> photos = getPhotosByAlbumId(albumId);
+        WriteResult remove = albumPhotoDao.remove(new Query().addCriteria(Criteria.where("album.$id").is(new ObjectId(albumId))));
+        photos.forEach(i -> removePhotoById(i.getId().toString()));
+        return remove;
     }
 
     private FileInfo convert(GridFSInputFile file) {

@@ -2,6 +2,7 @@ package com.lexiaoyao.service;
 
 import com.lexiaoyao.model.mongo_po.Album;
 import com.lexiaoyao.model.mongo_po.FileInfo;
+import com.mongodb.WriteResult;
 import com.mongodb.gridfs.GridFSDBFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,10 +12,7 @@ public interface PhotoService {
 
     FileInfo save(MultipartFile photo, String albumId, Boolean isCover);
 
-
     GridFSDBFile getPhotoById(String fileId);
-
-    void removePhoto(String id);
 
     Album createAlbum(String albumName, String desc);
 
@@ -23,6 +21,12 @@ public interface PhotoService {
     FileInfo getCover(String albumId);
 
     List<Album> listAlbums();
+
+    WriteResult removePhotoById(String photoId);
+
+    Album getAlbumById(String albumId);
+
+    WriteResult deleteAlbum(String albumId);
 
 
 }
