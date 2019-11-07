@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lexiaoyao.handler.FailedHandler;
 import com.lexiaoyao.handler.JWTFilter;
 import com.lexiaoyao.handler.SuccessHandler;
+import com.lexiaoyao.handler.VerifyCodeFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +23,17 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FailedHandler failedHandler;
 
+    @Autowired
+    private VerifyCodeFilter verifyCodeFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        /**
+         * 图形验证码需要放入redis里
+         */
+//        http.addFilterBefore(verifyCodeFilter, UsernamePasswordAuthenticationFilter.class);
+
         http.formLogin()
                 .loginPage("/authentication/require")
                 .loginProcessingUrl("/login")
@@ -36,7 +46,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/register",
                         "/topic/guest",
                         "/photo/**",
-                        "/topic/**"
+                        "/topic/**",
+                        "/vercode"
                 ).permitAll()
 //                swagger
                 .antMatchers("/swagger-ui.html").permitAll()
@@ -53,6 +64,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().headers().frameOptions().disable()
                 .and().addFilter(new JWTFilter(authenticationManager()))
+
         ;
     }
 

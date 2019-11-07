@@ -15,6 +15,7 @@ public class CorsConfig {
 
     /**
      * 允许跨域调用的过滤器
+     * 还需要在springSecurity核心配置里.and().cors()
      */
     @Bean("corsFilter")
     public CorsFilter corsFilter() {
